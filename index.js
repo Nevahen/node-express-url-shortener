@@ -1,7 +1,11 @@
+
+
 const sqlite = require('sqlite3')
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const randomid = require('./randomid');
+
 
 db = new sqlite.Database('database.sqlite', () =>{
     db.exec(`
@@ -29,8 +33,11 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.use(express.static('static'))
-
 app.listen(3000, () => console.log('Url-shortener started at port 3000!'))
+
+app.get('/notfound', (req, res) => {
+    res.status(404).send("Not found");
+})
 
 app.get('/:id', (req, res)=> {
     const id = req.params.id;
@@ -40,7 +47,7 @@ app.get('/:id', (req, res)=> {
         }
 
         if(row === undefined){
-            res.status(404).send("not found")
+            res.redirect('/notfound');
         }
         else{
             res.redirect(row.target)
@@ -50,10 +57,20 @@ app.get('/:id', (req, res)=> {
 })
 
 app.post('/', (req, res) =>{
-    let n = Math.floor(Math.random()*100000000)
-    res.json(n);
+
+    if(req.body.key === "1"){
+        let payload = {error:"That wasn't a valid URL"}
+        res.status(400).json(payload).end()
+        return
+    }
+
+    let payload = {
+        shortid: randomid.randomId(7)
+    }
+    res.json(payload);
 })
 
+
 app.use((req, res)=>{
-    res.status(404).end("not found");
+    res.redirect('/notfound');
 })

@@ -1,13 +1,9 @@
 body{
-    background: rgb(255, 251, 251);
+    background: #9B9574;
     height: 100vh;
 }
 
-.pageroot{
 
-    background: rgb(233, 233, 233);
-
-}
 
 h1,h2,h3{
     word-wrap: break-word;
@@ -18,20 +14,23 @@ h1,h2,h3{
 }
 
 .header{
-    background: rgb(61, 165, 235);
+    background: #736E50;
     min-height: 15vh;
-    border-bottom: 15px solid rgb(81, 176, 240);
+    color: #ECE8D3;
+    border-bottom: 15px solid #57502C;
 }
 
 .content{
-    background: rgb(234, 247, 253);
+    background: #BFBA9D;
     min-height: 85vh;
+    color: #736E50;
 }
 
 
 input[type="text"] {
     height:50px;
     font-size: 24px;
+
 }
 
 .error{
@@ -40,4 +39,24 @@ input[type="text"] {
 .footer1{
     position: fixed;
     left:22;
+}
+
+.btn-cust{
+background: #57502C;
+border: none;
+color:white;
+font-weight: bold;
+}
+
+.btn-cust:hover, .btn-cust:focus{
+    background: rgb(61, 46, 0);
+    border: none;
+}
+
+.btn:active{
+    border: none;
+}
+
+#errorsect{
+    color:black;
 }

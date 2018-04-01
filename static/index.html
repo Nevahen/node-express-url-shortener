@@ -12,12 +12,12 @@
 
 <body>
 
-    <div class="container-fluid fill pageroot">
+
 
         <div class="container header">
             <div class="row">
                 <header class="col-12 mt-4">
-                    <h1>Url shortener demo!</h1>
+                    <h1>Short-URL demo</h1>
                 </header>
             </div>
         </div>
@@ -31,24 +31,24 @@
 
                 <div class="col-10 offset-1">
                     <input id="inputfield" type="text" placeholder="http://" class="form-control" />
-                    <button id="submitbtn" class="btn btn-primary center col-12 mt-1"> Shorten it!</button>
+                    <button id="submitbtn" class="btn btn-cust center col-12 mt-1"> Shorten it!</button>
                 </div>
 
             </div>
 
-            <div class="row mt-2" id="created" hidden>
-                <div class="col-10 offset-1" style="background:rgb(185, 255, 185);border-radius:1em">
-                    <h2 class="text-center">Created this link for you!</h2>
+            <div class="row mt-5" id="created" hidden>
+                <div class="col-8 offset-2" style="background:rgb(185, 255, 185);border-radius:1em">
+                    <h2 class="text-center">Created this url for you <span style="color:red"><3</span></h2>
                     <h3 class="text-center">
-                        <a class="short-url" href="http://osq.fi/">osq.fi/8Agyertyioertuyåioetrtuyrtepiouyrtpieouypieortuypieortuypiort8z</a>
+                        <a class="short-url" href="#">URL</a>
                     </h3>
                 </div>
             </div>
-            <div class="row mt-2" hidden>
-                <div class="col-10 offset-1" style="background:rgb(233, 139, 126);border-radius:1em">
-                    <h3 class="text-center">Woops error</h3>
+            <div id="errorsect" class="row mt-2" hidden>
+                <div class="col-8 offset-2" style="background:rgb(160, 74, 62);border-radius:1em">
+                    <h3 class="text-center">Error</h3>
                     <br/>
-                    <p id="error-message">This is why I crashed</p>
+                    <p class="text-center" id="error-message">This is why I crashed</p>
                 </div>
             </div>
 
@@ -57,7 +57,7 @@
     </div>
 
 
-    </div>
+  
     <script src="./scripts.js"></script>
 </body>
 

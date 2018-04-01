@@ -27,6 +27,9 @@ btn.addEventListener("click", handleSubmit)
 input.addEventListener("change", onInputChange)
 
 function handleSubmit(){
+
+    setDefaultState();
+
     if(input.value === ""){
         input.classList.add("error");
 
@@ -65,11 +68,31 @@ function processRequest(xhr){
                 input.value = "";
                 created.hidden = false;
 
+                resp = JSON.parse(xhr.response);
+
                 let link = document.querySelector('.short-url')
-                link.innerHTML = "http://"+window.location.host+"/" + xhr.response;
-                link.href = "http://"+window.location.host+"/" + xhr.response;
+                link.innerHTML = "http://"+window.location.host+"/" + resp.shortid;
+                link.href = "http://"+window.location.host+"/" + resp.shortid;
             }, 1000)
         }
+        if(xhr.readyState === 4 && xhr.status !== 200){
+
+            setDefaultState();
+
+            let err = document.getElementById("errorsect")
+            let resp = JSON.parse(xhr.response)
+            document.getElementById("error-message").innerHTML = resp.error
+            err.hidden = false;
+
+        }
+}
+
+function setDefaultState(){
+    document.getElementById("errorsect").hidden = true;
+    created.hidden = true;
+    btnObject.setState("ready");
+    btnObject.updateText();
+    btn.disabled = input.disabled = false;
 }
 
 function onInputChange(){
