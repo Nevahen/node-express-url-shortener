@@ -1,0 +1,43 @@
+body{
+    background: rgb(255, 251, 251);
+    height: 100vh;
+}
+
+.pageroot{
+
+    background: rgb(233, 233, 233);
+
+}
+
+h1,h2,h3{
+    word-wrap: break-word;
+}
+
+.fill{
+    min-height: 100vh;
+}
+
+.header{
+    background: rgb(61, 165, 235);
+    min-height: 15vh;
+    border-bottom: 15px solid rgb(81, 176, 240);
+}
+
+.content{
+    background: rgb(234, 247, 253);
+    min-height: 85vh;
+}
+
+
+input[type="text"] {
+    height:50px;
+    font-size: 24px;
+}
+
+.error{
+    border-left: 5px solid red;
+}
+.footer1{
+    position: fixed;
+    left:22;
+}
