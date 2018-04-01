@@ -16,7 +16,7 @@ db = new sqlite.Database('database.sqlite', () =>{
         creator text,
         time text
     );
-    CREATE UNIQUE INDEX IF NOT EXISTS key ON links(key);
+    CREATE UNIQUE INDEX IF NOT EXISTS key ON links('key');
     `,(err)=>{
         if(err){
             console.log(err);
@@ -41,6 +41,7 @@ app.get('/notfound', (req, res) => {
 
 app.get('/:id', (req, res)=> {
     const id = req.params.id;
+    console.log(id)
     db.get("SELECT * from links WHERE key = ?", id,function(err,row){
         if(err){
             console.log(err)
@@ -56,7 +57,9 @@ app.get('/:id', (req, res)=> {
 
 })
 
-app.post('/', (req, res) =>{
+app.post('/', async (req, res) =>{
+
+    console.log(req.body.key)
 
     if(req.body.key === "1"){
         let payload = {error:"That wasn't a valid URL"}
@@ -64,12 +67,57 @@ app.post('/', (req, res) =>{
         return
     }
 
+    id = await createRecord(req.body.key,req.ip)
+    
+
+
     let payload = {
-        shortid: randomid.randomId(7)
+        shortid: id
     }
     res.json(payload);
 })
 
+async function createRecord(target,ip){
+    key = randomid.randomId(7)
+    exists = await checkExists(key)
+    if(exists){
+        throw Error("Key already exists!");
+    }
+
+       linkObject = {
+        $target: target,
+        $key: key,
+        $time: new Date(),
+        $creator: ip || null
+    }
+
+    console.log(linkObject)
+
+    db.run('INSERT into links (target,key,time,creator) VALUES ($target,$key,$time,$creator);', linkObject, (err)=>{
+        if(err){
+            console.log(err)
+        }
+    })
+    return linkObject.$key
+}
+
+
+function checkExists(key){
+
+    return new Promise((resolve, reject) => {
+        a = db.get('SELECT * from links where key = ?', key, (err,row) => {
+            if(err){
+            }
+
+            if(row === undefined){
+                resolve(false)
+            }
+            else {
+                resolve(true);
+            }
+        })
+    })
+}
 
 app.use((req, res)=>{
     res.redirect('/notfound');

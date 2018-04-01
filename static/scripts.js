@@ -52,8 +52,8 @@ function makeRequest(input){
         processRequest(xhr);
     };
 
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send("key=" + input)
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send(JSON.stringify({key:input}))
 
 }
 
