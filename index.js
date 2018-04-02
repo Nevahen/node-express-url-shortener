@@ -68,7 +68,7 @@ app.post('/', async (req, res) =>{
         return;
     }
 
-    if(!validUrl.isUri(req.body.key)){
+    if(!validUrl.isWebUri(req.body.key)){
         let payload = {error:"That wasn't a valid URL"}
         res.status(400).json(payload).end()
         return
