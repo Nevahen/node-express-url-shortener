@@ -60,3 +60,9 @@ font-weight: bold;
 #errorsect{
     color:black;
 }
+
+.footer{
+    position: fixed;
+    bottom: 0;
+    color: rgb(61, 46, 0);
+}

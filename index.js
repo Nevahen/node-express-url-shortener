@@ -5,7 +5,13 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const randomid = require('./randomid');
+const validUrl = require('valid-url');
+const path = require('path')
 
+var options = {
+    PORT: 80,
+    SHORTID_LENGTH: 6
+}
 
 db = new sqlite.Database('database.sqlite', () =>{
     db.exec(`
@@ -24,24 +30,18 @@ db = new sqlite.Database('database.sqlite', () =>{
     })
 })
 
-// Settings //
-
-const GUID_LENGTH = 8;
-const APP_PORT    = 3000;
-
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+app.use(bodyParser.json()); 
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 app.use(express.static('static'))
-app.listen(3000, () => console.log('Url-shortener started at port 3000!'))
+app.listen(options.PORT, () => console.log('Url-shortener started!'))
 
 app.get('/notfound', (req, res) => {
-    res.status(404).send("Not found");
+    res.status(404).sendFile(path.join(__dirname+'/static/notfound.html'));
 })
 
 app.get('/:id', (req, res)=> {
     const id = req.params.id;
-    console.log(id)
     db.get("SELECT * from links WHERE key = ?", id,function(err,row){
         if(err){
             console.log(err)
@@ -54,14 +54,21 @@ app.get('/:id', (req, res)=> {
             res.redirect(row.target)
         }
     })
-
 })
 
 app.post('/', async (req, res) =>{
+    
+    // Checks
 
-    console.log(req.body.key)
+    if(!req.body.key){
+        let payload = {
+            error: "No URL provided"
+        }
+        res.status(400).json(payload)
+        return;
+    }
 
-    if(req.body.key === "1"){
+    if(!validUrl.isUri(req.body.key)){
         let payload = {error:"That wasn't a valid URL"}
         res.status(400).json(payload).end()
         return
@@ -69,19 +76,26 @@ app.post('/', async (req, res) =>{
 
     id = await createRecord(req.body.key,req.ip)
     
+    if(id === undefined){
+        res.status(500).json({error:"Unexpected error"})
+        return
+    }
 
+    // Sending created shortid
 
     let payload = {
         shortid: id
     }
+
     res.json(payload);
 })
 
 async function createRecord(target,ip){
-    key = randomid.randomId(7)
+    key = randomid.randomId(options.SHORTID_LENGTH)
     exists = await checkExists(key)
+
     if(exists){
-        throw Error("Key already exists!");
+        return undefined
     }
 
        linkObject = {
@@ -91,9 +105,7 @@ async function createRecord(target,ip){
         $creator: ip || null
     }
 
-    console.log(linkObject)
-
-    db.run('INSERT into links (target,key,time,creator) VALUES ($target,$key,$time,$creator);', linkObject, (err)=>{
+    db.run('INSERT into links (target,key,time,creator) VALUES ($target,$key,$time,$creator);', linkObject, (err) => {
         if(err){
             console.log(err)
         }
